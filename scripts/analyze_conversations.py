@@ -39,9 +39,7 @@ def main():
             'gizmo_id',
             'gizmo_type',
         )
-        .with_columns(
-            col('disabled_tool_ids').list.join(',').replace('', None)
-        )
+        .with_columns(col('disabled_tool_ids').list.join(',').replace('', None))
         # Remove 3rd party plugin convos since there's so few, and they're old
         .filter(col('plugin_ids').is_null())
         .drop('plugin_ids')

@@ -26,7 +26,7 @@ class ContentReference(Model):
         'products',
         'product_entity',
         'businesses_map',
-        'file',     
+        'file',
     ]
     matched_text: str
     start_idx: int
@@ -83,7 +83,6 @@ class ContentReference(Model):
     source: str | None = None
 
 
-                                
 class Cite(Model):
     cite: str
     title: str | None = None
@@ -92,12 +91,12 @@ class Cite(Model):
     snippet: str | None = None
     attribution: str | None = None
 
+
 type NamedRef = Lit[
     'malformed',
     'hidden',
     'optimistic_image',
     'optimistic_map',
-
 ]
 
 
@@ -121,6 +120,7 @@ class Product(Model):
     rating_grouped_citation: str | None = None
     offers: list[dict[str, Any]] | None = None
 
+
 class Domain(Model):
     title: str
     subtitle: str
@@ -129,9 +129,11 @@ class Domain(Model):
     sub_domains: list[SubDomains]
     attribution: str
 
+
 class SubDomains(Model):
     url: str | None = None
     title: str | None = None
+
 
 class Source(Model):
     title: str
@@ -161,7 +163,6 @@ class Item(Model):
     attribution_segments: list[str] | None = None
     supporting_websites: list[SupportingWebsite] | None = None
     refs: list[Ref] | None = None
-
 
 
 class SupportingWebsite(Model):

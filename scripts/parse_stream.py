@@ -105,7 +105,9 @@ def main():
     class Deltas(Model):
         deltas: list[Delta]
 
-    deltas = Deltas.model_validate({'deltas': [d.model_dump(exclude_unset=True) for d in temp_deltas]})
+    deltas = Deltas.model_validate(
+        {'deltas': [d.model_dump(exclude_unset=True) for d in temp_deltas]}
+    )
 
     print(
         black.format_str(
@@ -131,9 +133,8 @@ class Events(Model):
     events: list[Event]
 
 
-type Delta = Annotated[
-    OperationDelta | PatchDelta, Discriminator('o')
-]
+type Delta = Annotated[OperationDelta | PatchDelta, Discriminator('o')]
+
 
 class AddDelta(Model):
     p: str
@@ -157,6 +158,7 @@ class ReplaceDelta(Model):
 type OperationDelta = Annotated[
     AddDelta | AppendDelta | ReplaceDelta, Discriminator('o')
 ]
+
 
 class PatchDelta(Model):
     p: str

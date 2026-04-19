@@ -56,19 +56,24 @@ class MultimodalTextContent(Model):
         if any([isinstance(part, str) for part in parts]):
             # Convert string parts to TextContentPart
             return [
-                {'content_type': 'text', 'text': part} if isinstance(part, str) else part
+                {'content_type': 'text', 'text': part}
+                if isinstance(part, str)
+                else part
                 for part in parts
             ]
         return parts
 
+
 class UserEditableContent(Model):
     content_type: Lit['user_editable_context']
-    user_profile: str 
+    user_profile: str
     user_instructions: str
+
 
 class TextContentPart(Model):
     content_type: Lit['text']
     text: str | None = None
+
 
 class ImageContent(Model):
     content_type: Lit['image_asset_pointer']
@@ -93,15 +98,19 @@ class ImageMetadata(Model):
     watermarked_asset_pointer: None
     lpe_keep_patch_ijhw: None = None
 
+
 type AudioContent = Annotated[
     AudioTranscription | AudioAssetPointer | RealTimeAudioContent,
     pyd.Discriminator('content_type'),
 ]
+
+
 class AudioTranscription(Model):
     content_type: Lit['audio_transcription']
     text: str
     direction: Lit['in'] | None = None
     decoding_id: None = None
+
 
 class RealTimeAudioContent(Model):
     expiry_datetime: str | None = None
@@ -119,10 +128,11 @@ class VideoContainerAssetPointer(Model):
     format: Lit['mp4']
     frame_attributes: list[VideoFrameAttribute] | None = None
 
+
 class VideoFrameAttribute(Model):
     frame_index: int
     timestamp: float
-    metadata:  dict[str, Any] | None = None
+    metadata: dict[str, Any] | None = None
 
 
 class AudioAssetPointer(Model):
@@ -132,6 +142,7 @@ class AudioAssetPointer(Model):
     size_bytes: int
     format: Lit['wav']
     metadata: AudioMetadata | None = None
+
 
 class AudioMetadata(Model):
     start_timestamp: float | None = None
@@ -160,7 +171,9 @@ class Metadata(Model):
     paragen_variants_info: ParagenVariantsInfo | None = None
     paragen_variant_choice: str | None = None
     caterpillar_selected_sources: list[SelectedSource] | None = None
-    system_hints: list[Lit['search','research','agent','canvas', 'moonshine']] | None = None
+    system_hints: (
+        list[Lit['search', 'research', 'agent', 'canvas', 'moonshine']] | None
+    ) = None
     is_visually_hidden_from_conversation: bool | None = None
     user_context_message_data: UserContextMessageData | None = None
     is_user_system_message: bool | None = None
@@ -171,9 +184,6 @@ class Metadata(Model):
     targeted_reply_label: str | None = None
     canvas: Canvas | None = None
     dalle: dict[str, Any] | None = None
-    
-
-
 
 
 type SelectedSource = Lit[
@@ -185,8 +195,10 @@ type SelectedSource = Lit[
     'notion_sync_connector',
 ]
 
+
 class UserContextMessageData(Model):
     about_user_message: str
+
 
 class Attachment(Model):
     id: str

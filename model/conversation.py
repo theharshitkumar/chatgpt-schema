@@ -30,9 +30,23 @@ class Conversation(Model):
     blocked_urls: list[None] = None
     default_model_slug: ModelName | None
     conversation_origin: None = None
-    voice: Lit['breeze','cove','maple','sol','ember','arbor','juniper','vale','spruce','glimmer'] | None = None
+    voice: (
+        Lit[
+            'breeze',
+            'cove',
+            'maple',
+            'sol',
+            'ember',
+            'arbor',
+            'juniper',
+            'vale',
+            'spruce',
+            'glimmer',
+        ]
+        | None
+    ) = None
     async_status: int | None = None
-    disabled_tool_ids: list[Lit['canmore','gcal','gcontacts','gmail']] = None
+    disabled_tool_ids: list[Lit['canmore', 'gcal', 'gcontacts', 'gmail']] = None
     is_do_not_remember: Lit[False] | None = None
     memory_scope: Lit['global_enabled'] = None
     sugar_item_id: None = None
@@ -80,15 +94,13 @@ class Conversation(Model):
             msg['author_metadata'] = author['metadata']
             return msg
 
-        return {
-            k: flatten_message_node(v) for k, v in mapping.items()
-        }
+        return {k: flatten_message_node(v) for k, v in mapping.items()}
 
     def get_root_node(self) -> RootNode:
         for node in self.mapping.values():
             if node.parent is None and node.role == 'root':
                 return node
-        raise ValueError("No root node found in the conversation mapping.")
+        raise ValueError('No root node found in the conversation mapping.')
 
 
 def nullify_empty_dicts_rec(obj: Any) -> Any:

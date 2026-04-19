@@ -9,6 +9,7 @@ from .config import Model, DefaultToolName, ModelName, PluginName
 from . import contentref
 from .tool import Canvas
 
+
 class AssistantMessage(Model):
     """
     A message at `Conversation.mapping[<id>].message` where author.role == 'assistant'
@@ -35,7 +36,11 @@ type Status = Lit['finished_successfully', 'in_progress', 'finished_partial_comp
 
 
 type Content = Annotated[
-    TextContent | CodeContent | ThoughtsContent | ReasoningRecapContent | MultiModalTextContent,
+    TextContent
+    | CodeContent
+    | ThoughtsContent
+    | ReasoningRecapContent
+    | MultiModalTextContent,
     pyd.Discriminator('content_type'),
 ]
 
@@ -70,6 +75,7 @@ class ReasoningRecapContent(Model):
     content_type: Lit['reasoning_recap']
     text: str = pyd.Field(alias='content')
 
+
 class MultiModalTextContent(Model):
     content_type: Lit['multimodal_text']
     parts: list[AudioContent]
@@ -80,15 +86,19 @@ class MultiModalTextContent(Model):
         if any([isinstance(part, str) for part in parts]):
             # Convert string parts to TextContentPart
             return [
-                {'content_type': 'text', 'text': part} if isinstance(part, str) else part
+                {'content_type': 'text', 'text': part}
+                if isinstance(part, str)
+                else part
                 for part in parts
             ]
         return parts
-    
+
+
 type AudioContent = Annotated[
     AudioTranscription | AudioAssetPointer | RealTimeAudioContent,
     pyd.Discriminator('content_type'),
 ]
+
 
 class AudioTranscription(Model):
     content_type: Lit['audio_transcription']
@@ -105,6 +115,7 @@ class AudioAssetPointer(Model):
     format: Lit['wav']
     metadata: AudioMetadata | None = None
 
+
 class AudioMetadata(Model):
     start_timestamp: float | None = None
     end_timestamp: float | None = None
@@ -116,6 +127,7 @@ class AudioMetadata(Model):
     start: float | None = 0.0
     end: float | None = 0.0
 
+
 class RealTimeAudioContent(Model):
     expiry_datetime: str | None = None
     content_type: Lit['real_time_user_audio_video_asset_pointer']
@@ -124,6 +136,7 @@ class RealTimeAudioContent(Model):
     audio_asset_pointer: AudioAssetPointer | None = None
     audio_start_timestamp: float | None = None
 
+
 class Thought(Model):
     summary: str
     text: str = pyd.Field(alias='content')
@@ -131,7 +144,9 @@ class Thought(Model):
 
 class AuthorMetadata(Model):
     real_author: Lit['tool:web']
-    sonicberry_model_id: Lit['current_sonicberry_paid','alpha.sonicberry_2s_p'] | None = None
+    sonicberry_model_id: (
+        Lit['current_sonicberry_paid', 'alpha.sonicberry_2s_p'] | None
+    ) = None
     source: Lit['sonic_tool'] | None = None
 
 
@@ -180,7 +195,9 @@ class Metadata(Model):
     n7jupd_summary: str | None = None
     n7jupd_crefs: list[Any] | None = None
     n7jupd_crefs_by_file: dict[str, Any] | None = None
-    content_references_by_file: dict[str, list[contentref.ContentReference]] | None = None
+    content_references_by_file: dict[str, list[contentref.ContentReference]] | None = (
+        None
+    )
     is_visually_hidden_reasoning_group: bool | None = None
     canvas: Canvas | None = None
     safety_plugin_status_code: int | None = None
@@ -193,7 +210,7 @@ class Metadata(Model):
 
 class ModelSwitcherDeny(Model):
     slug: ModelName | Lit['auto']
-    context: Lit['regenerate','conversation']
+    context: Lit['regenerate', 'conversation']
     reason: Lit['unsupported_canvas']
     description: str
 
@@ -204,7 +221,6 @@ class SubTool(Model):
     used_internet: bool = False
     changed_url: bool = False
     result_of_subtool: str | None = None
-
 
 
 type ReasoningStatus = Lit['is_reasoning', 'reasoning_ended']
@@ -229,8 +245,12 @@ class SonicClassificationResult(Model):
     search_complexity: Lit['simple'] | None = None
 
 
-
-type ClassifierConfigName = Lit['sonic_force_pg_switcher_renderer_config','sonic_classifier_ev3', 'sonic_classifier_3cls_ev3', 'sonic_classifier_3cls_paid_v1_merge_ev3']
+type ClassifierConfigName = Lit[
+    'sonic_force_pg_switcher_renderer_config',
+    'sonic_classifier_ev3',
+    'sonic_classifier_3cls_ev3',
+    'sonic_classifier_3cls_paid_v1_merge_ev3',
+]
 
 
 class SearchQuery(Model):
@@ -294,7 +314,6 @@ class CitationMetadataWebpage(Model):
     pub_date: str | None = None
     og_tags: None = None
     extra: CitationMetadataExtra | None
-    
 
 
 class CitationMetadataOther(Model):
@@ -308,13 +327,15 @@ class CitationMetadataOther(Model):
     source: str | None = None
     extra: dict[str, Any] | None = None
 
+
 class CitationMetadataImage(Model):
     type: Lit['image_inline']
     asset_pointer_links: list[str]
     clicked_from_url: str | None = None
     clicked_from_title: str | None = None
 
-type CitationMetadata = Annotated [
+
+type CitationMetadata = Annotated[
     CitationMetadataWebpage | CitationMetadataOther | CitationMetadataImage,
     pyd.Discriminator('type'),
 ]

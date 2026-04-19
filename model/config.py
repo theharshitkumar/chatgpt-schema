@@ -93,7 +93,6 @@ type DefaultToolName = Lit[
     'file_search',
     'computer.do',
     'computer.get',
-
 ]
 
 type ModelName = Lit[
@@ -127,4 +126,3 @@ type ModelName = Lit[
     'text-davinci-002-render-sha-mobile',
     'research',
 ]
-

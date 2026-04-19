@@ -4,6 +4,7 @@ from typing import Literal as Lit, Any
 from .config import Model, ModelName
 from .tool import Canvas
 
+
 class SystemMessage(Model):
     """
     A message at `Conversation.mapping[<id>].message` where author.role == 'system'
@@ -25,8 +26,10 @@ class SystemMessage(Model):
     metadata: Metadata
     children: list[str]
 
+
 class SystemInitiated(Model):
     is_system_initiated_conversation: Lit[True]
+
 
 class Content(Model):
     content_type: Lit['text']
@@ -69,7 +72,9 @@ class Metadata(Model):
     content_references: list[None] | None = None
     command: Lit['prompt'] | None = None
     is_contextual_answers_system_message: bool | None = None
-    contextual_answers_message_type: Lit['sources_and_filters_prompt', 'identity_prompt'] | None = None
+    contextual_answers_message_type: (
+        Lit['sources_and_filters_prompt', 'identity_prompt'] | None
+    ) = None
 
 
 class ParagenVariants(Model):
@@ -77,7 +82,6 @@ class ParagenVariants(Model):
     num_variants_in_stream: int
     display_treatment: Lit['skippable']
     conversation_id: str | None = None
-
 
 
 class FinishDetails(Model):

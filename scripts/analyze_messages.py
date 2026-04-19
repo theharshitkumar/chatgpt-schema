@@ -12,9 +12,7 @@ pl.Config(
 def main():
     df = (
         get_all_messages()
-        .with_columns(
-            text=col('text').str.replace('\n', ' ', n=-1).str.slice(0, 40)
-        )
+        .with_columns(text=col('text').str.replace('\n', ' ', n=-1).str.slice(0, 40))
         .filter(
             col('finish_details').struct.field('type') == 'interrupted',
             col('end_turn') == True,

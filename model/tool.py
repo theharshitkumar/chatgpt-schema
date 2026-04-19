@@ -27,10 +27,11 @@ class ToolMessage(Model):
 
 
 class AuthorMetadata(Model):
-    real_author: Lit['tool:web.run','tool:web', 'tool:web.search']
-    sonicberry_model_id: Lit['current_sonicberry_paid', 'alpha.sonicberry_2s_p'] | None = None
+    real_author: Lit['tool:web.run', 'tool:web', 'tool:web.search']
+    sonicberry_model_id: (
+        Lit['current_sonicberry_paid', 'alpha.sonicberry_2s_p'] | None
+    ) = None
     source: Lit['sonic_tool'] | None = None
-
 
 
 class TextContent(Model):
@@ -82,6 +83,7 @@ class BrowserQuoteContent(Model):
     title: str
     tether_id: None = None
 
+
 class SonicWebpageContent(Model):
     content_type: Lit['sonic_webpage']
     url: str
@@ -94,6 +96,7 @@ class SonicWebpageContent(Model):
     pub_timestamp: float | None = None
     ref_id: str | None = None
 
+
 class MultimodalTextContent(Model):
     content_type: Lit['multimodal_text']
     parts: list[ContentPart | str] | None = None
@@ -104,7 +107,9 @@ class MultimodalTextContent(Model):
         if any([isinstance(part, str) for part in parts]):
             # Convert string parts to TextContentPart
             return [
-                {'content_type': 'text', 'text': part} if isinstance(part, str) else part
+                {'content_type': 'text', 'text': part}
+                if isinstance(part, str)
+                else part
                 for part in parts
             ]
         return parts
@@ -113,7 +118,6 @@ class MultimodalTextContent(Model):
 class TextContentPart(Model):
     content_type: Lit['text']
     text: str
-
 
 
 class ImageContentPart(Model):
@@ -125,10 +129,12 @@ class ImageContentPart(Model):
     fovea: int | None = None
     metadata: ImageMetadata | None
 
+
 type ContentPart = Annotated[
     TextContentPart | ImageContentPart,
     pyd.Discriminator('content_type'),
 ]
+
 
 class ImageMetadata(Model):
     dalle: Dalle
@@ -142,7 +148,6 @@ class ImageMetadata(Model):
     asset_pointer_link: None = None
     watermarked_asset_pointer: None = None
     lpe_keep_patch_ijhw: None = None
-    
 
 
 class Generation(Model):
@@ -174,6 +179,7 @@ class ComputerOutputContent(Model):
     text: str | None = None
     is_ephemeral: bool | None = None
 
+
 class ComputerOutputState(Model):
     type: Lit['computer_initialize_state', 'browser_state']
     id: str
@@ -186,7 +192,6 @@ class ComputerOutputState(Model):
     title: str | None = None
     dom: None = None
     url: str | None = None
-
 
 
 type Content = Annotated[
@@ -238,7 +243,15 @@ class Metadata(Model):
     canvas: Canvas | None = None
     search_turns_count: int | None = None
     search_source: Lit['composer_auto', 'composer_search'] | None = None
-    client_reported_search_source: Lit['composer_auto', 'conversation_composer_web_icon', 'conversation_composer_previous_web_mode', 'composer_search'] | None = None
+    client_reported_search_source: (
+        Lit[
+            'composer_auto',
+            'conversation_composer_web_icon',
+            'conversation_composer_previous_web_mode',
+            'composer_search',
+        ]
+        | None
+    ) = None
     async_task_title: str | None = None
     async_task_prompt: str | None = None
     async_task_type: Lit['research'] | None = None
@@ -285,6 +298,7 @@ class SubTool(Model):
     changed_url: bool = False
     result_of_subtool: str | None = None
 
+
 class AsyncTaskStatusMessage(Model):
     initial: str | None = None
     completed_with_time: str | None = None
@@ -296,7 +310,7 @@ class AsyncTaskStatusMessage(Model):
 
 class Permissions(Model):
     type: Lit['notification']
-    status: Lit['requested'] 
+    status: Lit['requested']
     notification_channel_id: Lit['deep_research', 'chatgpt_agent'] | None = None
     notification_channel_name: Lit['Research', 'Agent'] | None = None
     notification_priority: int
@@ -328,7 +342,7 @@ class VisualizationChart(Model):
     type: Lit['chart']
     file_id: str | None = None
     title: str | None = None
-    chart_type: Lit['bar', 'scatter','']
+    chart_type: Lit['bar', 'scatter', '']
     fallback_to_image: bool
 
 
@@ -340,14 +354,24 @@ type Visualization = Annotated[
 
 class Canvas(Model):
     textdoc_id: str | None = None
-    textdoc_type: Lit['document', 'code/python', 'code/sql', 'code/javascript', 'code/html', 'code/react'] | None = None
+    textdoc_type: (
+        Lit[
+            'document',
+            'code/python',
+            'code/sql',
+            'code/javascript',
+            'code/html',
+            'code/react',
+        ]
+        | None
+    ) = None
     version: int | None = None
     title: str | None = None
     create_source: Lit['model', 'system_hint_canvas'] | None = None
     from_version: int | None = None
     has_user_edit: bool | None = None
     textdoc_content_length: int | None = None
-    user_message_type: Lit['ask_chatgpt','accelerator', 'console'] | None = None
+    user_message_type: Lit['ask_chatgpt', 'accelerator', 'console'] | None = None
     selection_metadata: SelectionMetadata | None = None
     accelerator_metadata: AcceleratorMetadata | None = None
 
@@ -358,15 +382,14 @@ class AcceleratorMetadata(Model):
     prompt: str | None = None
 
 
-
 class SelectionMetadata(Model):
     selection_type: Lit['selection']
     selection_position_range: SelectionPositionRange | None = None
 
+
 class SelectionPositionRange(Model):
     start: int
     end: int
-
 
 
 class MetadataKwargs(Model):
