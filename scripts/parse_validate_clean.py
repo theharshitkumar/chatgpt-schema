@@ -39,13 +39,9 @@ from model.conversation import Conversation, Node
 DISPLAY_FAILED_RECORD = True
 
 
-def main():
-    with open('conversations.json', 'r') as f:
-        raw_convos = json.load(f)
-
+def process_raw_conversations(raw_convos: list[dict]) -> list[Conversation]:
     raw_convos = shorten_all_uuids(raw_convos, last_chars=16, test=True)
 
-    # Since all messages are valid, now validate the conversations
     convos = validate_model(Conversation, raw_convos)
     print(f'Conversation is valid for all {len(convos)} records.')
 
@@ -56,6 +52,16 @@ def main():
 
     with open('1-conversations-clean.pkl', 'wb') as f:
         pickle.dump(convos, f)
+
+    return convos
+
+
+# backwards compatible
+def main():
+    with open('conversations.json', 'r') as f:
+        raw_convos = json.load(f)
+
+    process_raw_conversations(raw_convos)
 
 
 def validate_model[T: BaseModel](model: type[T], documents: list[dict]) -> list[T]:
