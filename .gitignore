@@ -6,6 +6,8 @@ __pycache__/
 test.py
 stream-raw.txt
 
+chatgpt-conversations
+
 # Data
 conversations.json
 *.json
