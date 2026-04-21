@@ -33,12 +33,17 @@ by static type checkers)
 
 # Getting Started
 
-Clone this project, and `uv sync`.
+Clone this project, and run `uv sync`.
 
-Export your ChatGPT data. Place your `conversations.json` in the root of this project.
+Export your ChatGPT data. ChatGPT creates multiple `.json` files in a single `.zip` file. 
 
-Run `scripts/parse_and_validate.py` to process your conversations, see the output, and
+Extract and place it in the root of the project.
+
+Run `process_chatgpt_conversations.py \path\to\your_folder` to process your conversations, see the output, and
 identify any validation errors.
+
+or rename the folder to `chatgpt-conversations` to automatically pick the folder with your conversations. 
+
 
 Based on Pydantic's descriptive error messages (if any), update the models as
 needed. When you're done, we would greatly appreciate a pull request!
