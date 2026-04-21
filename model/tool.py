@@ -29,7 +29,12 @@ class ToolMessage(Model):
 class AuthorMetadata(Model):
     real_author: Lit['tool:web.run', 'tool:web', 'tool:web.search']
     sonicberry_model_id: (
-        Lit['current_sonicberry_paid', 'alpha.sonicberry_2s_p'] | None
+        Lit[
+            'current_sonicberry_paid',
+            'alpha.sonicberry_2s_p',
+            'current_sonicberry_unpaid_oai',
+        ]
+        | None
     ) = None
     source: Lit['sonic_tool'] | None = None
 
@@ -146,8 +151,10 @@ class ImageMetadata(Model):
     emu_patches_override: None = None
     sanitized: bool
     asset_pointer_link: None = None
-    watermarked_asset_pointer: None = None
+    watermarked_asset_pointer: str | None = None
     lpe_keep_patch_ijhw: None = None
+    is_no_auth_placeholder: None = None
+    lpe_delta_encoding_channel: None = None
 
 
 class Generation(Model):
@@ -159,6 +166,8 @@ class Generation(Model):
     width: int | None = None
     transparent_background: bool | None = None
     serialization_title: str | None = None
+    gen_size_v2: None
+    orientation: None
 
 
 class Dalle(Model):
@@ -283,6 +292,30 @@ class Metadata(Model):
     classifier_response: Lit['default'] | None = None
     retrieval_turn_number: int | None = None
     retrieval_file_index: int | None = None
+    can_save: bool | None = None
+    search_engine: Lit['bing'] | None = None
+    pending_memory_info: PendingMemoryInfo | None = None
+    ui_card_title: str | None = None
+    ui_card: bool | None = None
+    ui_card_description: str | None = None
+    ui_card_shimmer: bool | None = None
+    trigger_async_ux: bool | None = None
+    image_gen_task_id: str | None = None
+    image_gen_async: bool | None = None
+    model_adjustments: list[Lit['auto:smaller_model:reached_message_cap']] | None = None
+    search_model_queries: SearchModelQueries | None = None
+    turn_exchange_id: str | None = None
+
+
+class SearchModelQueries(Model):
+    queries: list[str]
+    type: Lit['search_model_queries']
+
+
+class PendingMemoryInfo(Model):
+    is_pending: bool
+    pending_memory_content: str
+    pending_message_id: str
 
 
 class N7Jupd(Model):
@@ -311,8 +344,10 @@ class AsyncTaskStatusMessage(Model):
 class Permissions(Model):
     type: Lit['notification']
     status: Lit['requested']
-    notification_channel_id: Lit['deep_research', 'chatgpt_agent'] | None = None
-    notification_channel_name: Lit['Research', 'Agent'] | None = None
+    notification_channel_id: (
+        Lit['deep_research', 'chatgpt_agent', 'image_gen'] | None
+    ) = None
+    notification_channel_name: Lit['Research', 'Agent', 'ImageGen'] | None = None
     notification_priority: int
 
 
@@ -330,6 +365,13 @@ class SearchResultEntry(Model):
     ref_id: None
     pub_date: float | None
     attribution: str
+    ref_id: SearchResultRefId | None = None
+
+
+class SearchResultRefId(Model):
+    ref_index: int
+    ref_type: Lit['search', 'reddit']
+    turn_index: int
 
 
 class VisualizationTable(Model):
@@ -362,6 +404,7 @@ class Canvas(Model):
             'code/javascript',
             'code/html',
             'code/react',
+            'code/other',
         ]
         | None
     ) = None
@@ -374,10 +417,12 @@ class Canvas(Model):
     user_message_type: Lit['ask_chatgpt', 'accelerator', 'console'] | None = None
     selection_metadata: SelectionMetadata | None = None
     accelerator_metadata: AcceleratorMetadata | None = None
+    error_type: Lit['pydantic_validation_error'] | None = None
+    is_failure: bool | None = None
 
 
 class AcceleratorMetadata(Model):
-    action: Lit['comment']
+    action: Lit['comment', 'edit']
     id: str
     prompt: str | None = None
 
@@ -395,7 +440,7 @@ class SelectionPositionRange(Model):
 class MetadataKwargs(Model):
     message_id: str
     pending_message_id: str | None = None
-    sync_write: Lit[False] | None = None
+    sync_write: bool | None = None
 
 
 type Command = Lit[

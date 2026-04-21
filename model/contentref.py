@@ -27,6 +27,7 @@ class ContentReference(Model):
         'product_entity',
         'businesses_map',
         'file',
+        'alt_text',
     ]
     matched_text: str
     start_idx: int
@@ -147,7 +148,7 @@ class Ref(Model):
     ref_index: int
 
 
-type RefType = Lit['search', 'image', 'view', 'news', 'fetch', 'academia']
+type RefType = Lit['search', 'image', 'view', 'news', 'fetch', 'academia', 'reddit']
 
 
 class Item(Model):

@@ -30,6 +30,7 @@ class AssistantMessage(Model):
     content: Content
     metadata: Metadata
     children: list[str]
+    update_time: float | None = None
 
 
 type Status = Lit['finished_successfully', 'in_progress', 'finished_partial_completion']
@@ -114,6 +115,7 @@ class AudioAssetPointer(Model):
     size_bytes: int
     format: Lit['wav']
     metadata: AudioMetadata | None = None
+    tool_audio_direction: None = None
 
 
 class AudioMetadata(Model):
@@ -140,12 +142,20 @@ class RealTimeAudioContent(Model):
 class Thought(Model):
     summary: str
     text: str = pyd.Field(alias='content')
+    chunks: list | None = None
+    summary: str
+    finished: bool
 
 
 class AuthorMetadata(Model):
     real_author: Lit['tool:web']
     sonicberry_model_id: (
-        Lit['current_sonicberry_paid', 'alpha.sonicberry_2s_p'] | None
+        Lit[
+            'current_sonicberry_paid',
+            'alpha.sonicberry_2s_p',
+            'current_sonicberry_unpaid_oai',
+        ]
+        | None
     ) = None
     source: Lit['sonic_tool'] | None = None
 
@@ -204,8 +214,12 @@ class Metadata(Model):
     model_switcher_deny: list[ModelSwitcherDeny] | None = None
     message_source: None = None
     classifier_response: Lit['default'] | None = None
-    skip_reasoning_title: Lit['Get a quick answer'] | None = None
+    skip_reasoning_title: Lit['Get a quick answer', 'Skip'] | None = None
     reasoning_title: str | None = None
+    can_save: bool | None = None
+    model_adjustments: list[Lit['auto:smaller_model:reached_message_cap']] | None = None
+    is_error: bool | None = None
+    turn_exchange_id: str | None = None
 
 
 class ModelSwitcherDeny(Model):

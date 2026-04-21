@@ -75,6 +75,17 @@ class Metadata(Model):
     contextual_answers_message_type: (
         Lit['sources_and_filters_prompt', 'identity_prompt'] | None
     ) = None
+    can_save: bool | None = None
+
+    model_adjustments: (
+        list[Lit['auto:smaller_model:reached_message_cap']] | ModelAdjustments | None
+    ) = None
+    turn_exchange_id: str | None = None
+
+
+class ModelAdjustments(Model):
+    can_save: bool | None = None
+    is_visually_hidden_from_conversation: bool | None = None
 
 
 class ParagenVariants(Model):

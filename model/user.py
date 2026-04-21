@@ -48,7 +48,7 @@ class TextContent(Model):
 
 class MultimodalTextContent(Model):
     content_type: Lit['multimodal_text']
-    parts: list[TextContentPart | ImageContent | AudioContent]
+    parts: list[Part]
 
     @pyd.field_validator('parts', mode='before')
     @classmethod
@@ -97,11 +97,19 @@ class ImageMetadata(Model):
     asset_pointer_link: None
     watermarked_asset_pointer: None
     lpe_keep_patch_ijhw: None = None
+    is_no_auth_placeholder: None
+    lpe_delta_encoding_channel: None
 
 
 type AudioContent = Annotated[
     AudioTranscription | AudioAssetPointer | RealTimeAudioContent,
     pyd.Discriminator('content_type'),
+]
+
+
+Part = Annotated[
+    TextContentPart | ImageContent | AudioContent,
+    pyd.Field(discriminator='content_type'),
 ]
 
 
@@ -142,6 +150,7 @@ class AudioAssetPointer(Model):
     size_bytes: int
     format: Lit['wav']
     metadata: AudioMetadata | None = None
+    tool_audio_direction: None = None
 
 
 class AudioMetadata(Model):
@@ -172,7 +181,18 @@ class Metadata(Model):
     paragen_variant_choice: str | None = None
     caterpillar_selected_sources: list[SelectedSource] | None = None
     system_hints: (
-        list[Lit['search', 'research', 'agent', 'canvas', 'moonshine']] | None
+        list[
+            Lit[
+                'search',
+                'research',
+                'agent',
+                'canvas',
+                'moonshine',
+                'reason',
+                'picture_v2',
+            ]
+        ]
+        | None
     ) = None
     is_visually_hidden_from_conversation: bool | None = None
     user_context_message_data: UserContextMessageData | None = None
@@ -184,6 +204,38 @@ class Metadata(Model):
     targeted_reply_label: str | None = None
     canvas: Canvas | None = None
     dalle: dict[str, Any] | None = None
+    can_save: bool | None = None
+    content_references: list | None = None
+    citations: list | None = None
+    image_results: list | None = None
+    search_result_groups: list | None = None
+    open_in_canvas_view: OpenInCanvasView | None = None
+    image_gen: ImageGen | None = None
+    image_gen_async: bool | None = None
+    search_queries: list | None = None
+    trigger_async_ux: bool | None = None
+    turn_exchange_id: str | None = None
+    writing_blocks: None = None
+
+
+class ImageGen(Model):
+    from_client: ImageGenFromClient | None = None
+
+
+class ImageGenFromClient(Model):
+    operation: ImageGenOperation
+
+
+class ImageGenOperation(Model):
+    mask_file_id: str | None = None
+    original_file_id: str | None = None
+    original_gen_id: str | None = None
+    type: Lit['inpainting']
+
+
+class OpenInCanvasView(Model):
+    id: str
+    type: Lit['canvas_textdoc']
 
 
 type SelectedSource = Lit[

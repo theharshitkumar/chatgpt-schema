@@ -19,17 +19,22 @@ class Conversation(Model):
     update_time: float
     moderation_results: list[None]
     current_node: str
-    plugin_ids: list[str] | None
+    plugin_ids: list[str] | None = None
     conversation_id: str
     conversation_template_id: str | None
-    gizmo_id: str | None
+    gizmo_id: str | None = None
     gizmo_type: Lit['gpt', 'snorlax'] | None = None
     is_archived: bool
     is_starred: None = None
-    safe_urls: list[str]
+    safe_urls: list[str] | None = None
     blocked_urls: list[None] = None
     default_model_slug: ModelName | None
     conversation_origin: None = None
+    atlas_mode_enabled: None = None
+    context_scopes: list[Lit['STUDY']] | None = None
+    pluginIds: dict | None = None
+    gizmoId: dict | None = None
+    safeUrls: dict | None = None
     voice: (
         Lit[
             'breeze',

@@ -96,6 +96,7 @@ type DefaultToolName = Lit[
 ]
 
 type ModelName = Lit[
+    'auto',
     'gpt-4',
     'gpt-4-1',
     'gpt-4-5',
@@ -112,6 +113,7 @@ type ModelName = Lit[
     'gpt-4o-jawbone',
     'gpt-5',
     'gpt-5-thinking',
+    'gpt-5-t-mini',
     'o1',
     'o1-mini',
     'o1-preview',
